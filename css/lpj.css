@@ -35,8 +35,9 @@ a:hover {
 }
 
 #map	{
-	width:500px;
-	height:300px;
+	margin-top:25px;
+	width:800px;
+	height:400px;
 }
 
 #chart	{
@@ -112,8 +113,16 @@ a:hover {
 
 #killList	{
 	display:inline-box;
-	float:left;
+	float:right;
 	width:500px;
+	height:300px;
+	overflow: hidden;
+}
+
+#topTen	{
+	display:inline-box;
+	float:left;
+	width:300px;
 	height:300px;
 	overflow: hidden;
 }

@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"strconv"
+	"github.com/abbot/go-http-auth"
 )
 
 type APIArgs	struct {
@@ -22,15 +23,33 @@ type APIReply	struct {
 
 func main() {
 
+	authenticator := auth.NewBasicAuthenticator("lekparken.nu", Secret)
+        //http.HandleFunc("/", authenticator.Wrap(Index))
+
+
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", Index)
+
+	http.HandleFunc("/", auth.JustCheck(authenticator, Index))
+	//router.HandleFunc("/", Index)
+	//router.HandleFunc("/", auth.JustCheck(authenticator, Index))
 	router.HandleFunc("/api", DBApi)
-	http.Handle("/", router)
+//	http.Handle("/", router)
 	http.Handle("/api", router)
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("./js/")))) 
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css/")))) 
 	log.Println("Server running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+func Secret(user, realm string) string {
+
+	fmt.Println("AUTH")
+        if user == "lekparken" {
+                // password is "hello"
+               // return "$1$dlPL2MqE$oQmn16q49SqdmhenQuNgs1"
+                return "$1$e1a09609$NRYb1LoqKq9oHDnwyKhP61"
+        }
+        return ""
 }
 
 
@@ -82,6 +101,20 @@ func DBApi(w http.ResponseWriter, r *http.Request) {
                         }
                         w.Header().Set("Content-Type", "application/json")
                         w.Write(species)
+                case "gettopten":
+                        scorers, err := json.Marshal(l.GetTopTen())
+                        if err != nil   {
+                                fmt.Println("JSON marshal error: ", err)
+                        }
+                        w.Header().Set("Content-Type", "application/json")
+                        w.Write(scorers)
+		case "gettotals":
+                        scorers, err := json.Marshal(l.GetTotals(hunter, species))
+                        if err != nil   {
+                                fmt.Println("JSON marshal error: ", err)
+                        }
+                        w.Header().Set("Content-Type", "application/json")
+                        w.Write(scorers)
 
 	}
 }

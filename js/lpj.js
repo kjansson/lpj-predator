@@ -2,6 +2,7 @@ drawMap();
 drawKillList();
 drawMemberList();
 drawAnimalList();
+drawTopTen();
 
 function getUrlParameter(sParam)
 {
@@ -90,12 +91,75 @@ function drawKillList()	{
 
 		});
 	}
-//		echo "<p>".$kill['date']." - ".$kill['animal']['realname']." (".$kill['q'].") - ".$kill['location']['pass']." - ".$kill['hunter']."<br>";		
-
-
-
-
 }
+
+
+function drawTopTen() {
+
+        var topTen = document.getElementById("topTen");
+
+        if(topTen) {
+
+		var hunter = getUrlParameter('hunter');
+		var species = getUrlParameter('species');
+
+		if(!hunter && !species)	{
+			var h2 = document.createElement("h2");
+                        var info = document.createTextNode("Topplista");
+                        h2.appendChild(info)
+                        topTen.appendChild(h2);
+
+			var req = 'action=gettopten';
+			$.getJSON('api', req, function(data)        {
+
+				data.forEach(function(scorer)     {
+				
+					if(scorer.Score != 0)	{
+
+						var p = document.createElement("p");
+						var info = document.createTextNode(scorer.Name+" - "+scorer.Score);
+						p.appendChild(info)
+						topTen.appendChild(p);
+					}
+
+				});
+			});
+		}
+		else	{
+	
+			var h2 = document.createElement("h2");
+                        var info = document.createTextNode("Totalt fällda");
+                        h2.appendChild(info)
+                        topTen.appendChild(h2);
+			var req = 'action=gettotals';
+			var hunter = getUrlParameter('hunter');
+			var species = getUrlParameter('species');
+
+			
+
+			if(hunter)      {
+				req = req.concat('&hunter=').concat(hunter);
+			}
+	                if(species)     {
+         	               req = req.concat('&species=').concat(species);
+	                }
+
+			$.getJSON('api', req, function(data)        {
+
+				data.forEach(function(kill)     {
+
+					var p = document.createElement("p");
+					var info = document.createTextNode(kill.Animal+" - "+kill.Q+"st");
+					p.appendChild(info)
+					topTen.appendChild(p);
+				});
+
+                	});
+		}
+        }
+}
+
+
 
 function drawMap() {
 
