@@ -12,9 +12,18 @@
 
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/lpj.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="css/tabs-addendum.css">
+	<link rel="stylesheet" href="css/lpj.css">
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyB8L5S6QMFuw30OOUAIsrtmTfmBLs5zpQ4"></script>
+        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script src="js/plugins.js"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="js/timelinestyle.js"></script>
     </head>
     <body>
         <!--[if lt IE 8]>
@@ -35,10 +44,28 @@
                                 <div id="killList">
                                         <h2>Senast nedlagda vilt</h2>
                                 </div>
-                        <div id="map"></div>
+
                         </div>
-                        <div id="chart"></div>
-                        <div id="scoreboard"></div>
+  <script>
+  $(function() {
+    $( "#tabs" ).tabs();
+  });
+  </script>
+</head>
+<body>
+ 
+<div id="tabs">
+  <ul>
+    <li><a href="#map">Karta</a></li>
+    <li><a href="#timeline">Tidslinje</a></li>
+  </ul>
+  <div id="map">
+  </div>
+  <div id="timeline">
+     <div id="timelinechart"></div>
+  </div>
+</div>
+
                 </div>
         </div>
         <div id="left">
@@ -79,11 +106,8 @@
 
 
 
-        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
-        <script src="js/plugins.js"></script>
-        <script src="js/lpj.js"></script>
 
+        <script src="js/lpj.js"></script>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=

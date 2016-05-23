@@ -1,3 +1,4 @@
+drawTimeLine();
 drawMap();
 drawKillList();
 drawMemberList();
@@ -173,6 +174,7 @@ function drawMap() {
         if(species)     {
                 req = req.concat('&species=').concat(species);
         }
+	req = req.concat('&limit=0')
         var test;
         $.getJSON('api', req, function(data)        {
 
@@ -244,4 +246,79 @@ function changeOpacity() {
 	heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
 }
 
+function drawTimeLine()	{
 
+        var req = 'action=getkills';
+        var hunter = getUrlParameter('hunter');
+        var species = getUrlParameter('species');
+
+
+        if(hunter)      {
+                req = req.concat('&hunter=').concat(hunter);
+        }
+        if(species)     {
+                req = req.concat('&species=').concat(species);
+        }
+	req = req.concat('&limit=0')
+	
+	//$.getJSON('/api', req).done(function(data)        {
+
+$.ajax({
+	dataType: "json",
+	url: '/api',
+	data: req,
+	success: drawTS
+});
+}
+
+function drawTS(data, stat, obj)	{
+		var index = 0
+
+	var series = []
+	var names = []
+	var tdata = [0,0,0,0,0,0,0,0,0,0,0,0]
+	var months = [new RegExp("\\d\\d-07-\\d\\d", "g"),new RegExp("\\d\\d-08-\\d\\d", "g"), new RegExp("\\d\\d-09-\\d\\d", "g"), new RegExp("\\d\\d-10-\\d\\d", "g"), new RegExp("\\d\\d-11-\\d\\d", "g"), new RegExp("\\d\\d-12-\\d\\d", "g"), new RegExp("\\d\\d-01-\\d\\d", "g"), new RegExp("\\d\\d-02-\\d\\d", "g"), new RegExp("\\d\\d-03-\\d\\d", "g"), new RegExp("\\d\\d-04-\\d\\d", "g"), new RegExp("\\d\\d-05-\\d\\d", "g"), new RegExp("\\d\\d-06-\\d\\d", "g")];
+
+		for(i = 0; i < data.length; i++)	{
+		//a$.each(data, function(kill)     {
+			if($.inArray(data[i].Animal.Realname, names) < 0)        {
+				names[index] = data[i].Animal.Realname;
+				series[index] = {name:data[i].Animal.Realname, data:tdata.slice()};
+				index++;
+			}
+		}
+
+		for(i = 0; i < months.length; i++)	{
+			for(n = 0; n < data.length; n++)	{
+				if(months[i].test(data[n].Date))	{
+					series[names.indexOf(data[n].Animal.Realname)].data[i] += parseInt(data[n].Q)
+				}
+			}
+		}
+
+	    $('#timelinechart').highcharts({
+		title: {
+		    text: 'Tidslinje över nedlagda vilt',
+		    x: -20 //center
+			},
+			chart: {type: 'spline'},
+			xAxis: {
+			    categories: ['Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec',
+				'Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun']},
+			yAxis: {
+			    title: {
+				text: 'Nedlagda vilt'
+			    },
+			    plotLines: [{
+				value: 0,
+				width: 1,
+				color: '#808080'
+			    }]},
+			legend: {
+			    layout: 'vertical',
+			    align: 'right',
+			    verticalAlign: 'middle',
+			    borderWidth: 0},
+			series: series
+		    });
+}

@@ -81,7 +81,7 @@ func DBApi(w http.ResponseWriter, r *http.Request) {
 	switch r.Form["action"][0]	{
 
 		case "getkills":
-			kills, err := json.Marshal(l.GetKills(hunter, species, limit))
+			kills, err := json.Marshal(l.GetKills(hunter, species, limit, true))
 			if err != nil	{
 				fmt.Println("JSON marshal error: ", err)
 			}

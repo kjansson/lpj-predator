@@ -3,6 +3,7 @@
 	padding: 0;
 }
 
+
 body {
 	background: #000;
 	font-family: Arial, Helvetica, sans-serif;
@@ -35,8 +36,9 @@ a:hover {
 }
 
 #map	{
-	margin-top:25px;
-	width:800px;
+	margin-top:5px;
+	margin-bottom:5px;
+	width:829px;
 	height:400px;
 }
 
@@ -133,4 +135,8 @@ a:hover {
 	text-align: center;
 	margin-top: 30px;
 	padding: 5px 0;
+}
+
+.highcharts-container	{
+	width:600px;
 }
