@@ -24,6 +24,7 @@ a:hover {
 
 #lpjstat	{
 	height:1000px;
+	width:1000px;
 }
 
 #sideside	{
@@ -38,13 +39,15 @@ a:hover {
 #map	{
 	margin-top:5px;
 	margin-bottom:5px;
-	width:829px;
+	padding: 0px;
+	width:100%;
 	height:400px;
 }
 
 #chart	{
-	width:880px;
+	width:100px;
 	height:400px;
+	padding:0px;
 }
 
 #scoreboard	{
@@ -60,6 +63,7 @@ a:hover {
 	color : #fff; 
 	font-size: 50px;
 	letter-spacing: -7px;
+	margin-left:180px;
 }
 
 #left {
@@ -87,7 +91,7 @@ a:hover {
 #right {
 	margin-top: 10px;
 	float: right;
-	width: 880px;
+	width: 1000px;
 	background: #000000;
 	text-align: justify;
 	padding: 10px;
@@ -116,17 +120,24 @@ a:hover {
 #killList	{
 	display:inline-box;
 	float:right;
-	width:500px;
+	width:47%;
 	height:300px;
 	overflow: hidden;
+	padding:5px;
+	padding-left:15px;
+	border: 1px solid #333333;
 }
 
 #topTen	{
 	display:inline-box;
 	float:left;
-	width:300px;
+	width:47%;
 	height:300px;
 	overflow: hidden;
+        padding:5px;
+	padding-left:15px;
+        border: 1px solid #333333;
+
 }
 
 #footer {
@@ -137,6 +148,19 @@ a:hover {
 	padding: 5px 0;
 }
 
+#timeline	{
+	width:100%;
+	padding:0px;
+}
+
+#timelinechart	{
+	width:100%;
+}
+
+
 .highcharts-container	{
-	width:600px;
+	width:100%; 
+	height:100%;
+	padding: 0px 0px 0px 0px !important;
+	margin: 0px 0px 0px 0px !important;
 }

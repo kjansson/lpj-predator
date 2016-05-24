@@ -113,14 +113,16 @@ function drawTopTen() {
 			var req = 'action=gettopten';
 			$.getJSON('api', req, function(data)        {
 
+				var place = 1
 				data.forEach(function(scorer)     {
 				
 					if(scorer.Score != 0)	{
 
 						var p = document.createElement("p");
-						var info = document.createTextNode(scorer.Name+" - "+scorer.Score);
+						var info = document.createTextNode(place+": "+scorer.Name+" - "+scorer.Score+" poäng");
 						p.appendChild(info)
 						topTen.appendChild(p);
+						place++
 					}
 
 				});
@@ -209,7 +211,7 @@ function drawMap() {
                         data: pointArray,
 			map: map
                 });
-                heatmap.set('radius', 20);
+                heatmap.set('radius', 35);
                 heatmap.setMap(map);
         });
 }
@@ -248,7 +250,7 @@ function changeOpacity() {
 
 function drawTimeLine()	{
 
-        var req = 'action=getkills';
+        var req = 'action=gettimeline';
         var hunter = getUrlParameter('hunter');
         var species = getUrlParameter('species');
 
@@ -269,16 +271,27 @@ $.ajax({
 	data: req,
 	success: drawTS
 });
+
+
+
+
 }
 
 function drawTS(data, stat, obj)	{
 		var index = 0
 
-	var series = []
-	var names = []
-	var tdata = [0,0,0,0,0,0,0,0,0,0,0,0]
-	var months = [new RegExp("\\d\\d-07-\\d\\d", "g"),new RegExp("\\d\\d-08-\\d\\d", "g"), new RegExp("\\d\\d-09-\\d\\d", "g"), new RegExp("\\d\\d-10-\\d\\d", "g"), new RegExp("\\d\\d-11-\\d\\d", "g"), new RegExp("\\d\\d-12-\\d\\d", "g"), new RegExp("\\d\\d-01-\\d\\d", "g"), new RegExp("\\d\\d-02-\\d\\d", "g"), new RegExp("\\d\\d-03-\\d\\d", "g"), new RegExp("\\d\\d-04-\\d\\d", "g"), new RegExp("\\d\\d-05-\\d\\d", "g"), new RegExp("\\d\\d-06-\\d\\d", "g")];
+	
 
+	var series = []
+
+	for(i = 0; i < data.length; i++)      {
+		series[i] = {name:data[i].Name, data:data[i].Data}
+	}
+
+//	var names = []
+//	var tdata = [0,0,0,0,0,0,0,0,0,0,0,0]
+//	var months = [new RegExp("\\d\\d-07-\\d\\d", "g"),new RegExp("\\d\\d-08-\\d\\d", "g"), new RegExp("\\d\\d-09-\\d\\d", "g"), new RegExp("\\d\\d-10-\\d\\d", "g"), new RegExp("\\d\\d-11-\\d\\d", "g"), new RegExp("\\d\\d-12-\\d\\d", "g"), new RegExp("\\d\\d-01-\\d\\d", "g"), new RegExp("\\d\\d-02-\\d\\d", "g"), new RegExp("\\d\\d-03-\\d\\d", "g"), new RegExp("\\d\\d-04-\\d\\d", "g"), new RegExp("\\d\\d-05-\\d\\d", "g"), new RegExp("\\d\\d-06-\\d\\d", "g")];
+/*
 		for(i = 0; i < data.length; i++)	{
 		//a$.each(data, function(kill)     {
 			if($.inArray(data[i].Animal.Realname, names) < 0)        {
@@ -295,13 +308,20 @@ function drawTS(data, stat, obj)	{
 				}
 			}
 		}
-
+*/
 	    $('#timelinechart').highcharts({
 		title: {
 		    text: 'Tidslinje över nedlagda vilt',
 		    x: -20 //center
 			},
-			chart: {type: 'spline'},
+			chart: {type: 'spline',
+				events: {
+					load: resize,
+					afterPrin: resize
+				},
+				reflow: true,
+				width: 1000
+			},
 			xAxis: {
 			    categories: ['Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec',
 				'Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun']},
@@ -321,4 +341,12 @@ function drawTS(data, stat, obj)	{
 			    borderWidth: 0},
 			series: series
 		    });
+
+	//chart.reflow()
+
+
+}
+
+function resize()	{
+	$(window).resize();
 }
