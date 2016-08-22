@@ -1,6 +1,6 @@
-drawDatePicker();
+//drawTimeLine();
 getSelectedYearURL();
-drawTimeLine();
+drawDatePicker();
 drawMap();
 drawKillList();
 drawMemberList();
