@@ -1,9 +1,14 @@
+drawDatePicker();
+getSelectedYearURL();
 drawTimeLine();
 drawMap();
 drawKillList();
 drawMemberList();
 drawAnimalList();
 drawTopTen();
+
+var startyear;
+var endyear;
 
 function getUrlParameter(sParam)
 {
@@ -18,6 +23,31 @@ function getUrlParameter(sParam)
         }
     }
 }
+
+
+function getSelectedYearURL()	{
+
+	//var start = document.getElementById("startyear");
+	//var end = document.getElementById("endyear");
+	var start = $("#startyear");
+	var end = $("#endyear");
+	
+	
+	if(start == end)	{
+		return null;
+	}
+
+	var ustart;
+	var uend;
+	var req = 'action=getyear';
+        $.getJSON('api', req, function(data)        {
+
+		ustart = data.start;
+
+	});	
+
+}
+
 
 function drawMemberList()	{
 	var memberList = document.getElementById("memberlist");
@@ -39,6 +69,79 @@ function drawMemberList()	{
 
                 });
         }
+}
+
+function drawDatePicker()	{
+
+	var start = getUrlParameter("startyear");
+	var end = getUrlParameter("endyear");
+
+	var req = 'action=getyears';
+	$.getJSON('api', req, function(data)        {
+		var s = $('<select id="startyear"/>'); 
+
+		var roof = 999;
+
+		for(var val in data) 
+		{    
+			if(start == data[val].Name)	{
+				$('<option />', {selected: "selected", value: data[val].Name, text: data[val].Name}).appendTo(s); 
+				roof = val;
+			}
+			else	{
+				$('<option />', {value: data[val].Name, text: data[val].Name}).appendTo(s);
+			}
+		} 
+		s.appendTo('#yearpicker');
+
+		$('#yearpicker').append('<p class="special_binder_yearpicker"> till </p>');
+
+		var s = $('<select id="endyear"/>');
+		for(var val in data)
+		{
+			if(!end)	{
+				if(roof == 999)	{
+					if(data[val].Name == start)	{
+						$('<option />', {selected: "selected", value: data[val].Name, text: data[val].Name}).appendTo(s);
+					}
+					else	{
+						$('<option />', {value: data[val].Name, text: data[val].Name}).appendTo(s);
+					}
+				}
+				else	{
+					if(roof >= val)	{
+						if(data[val].Name == start)     {
+							$('<option />', {selected: "selected", value: data[val].Name, text: data[val].Name}).appendTo(s);
+						}
+						else    {
+							$('<option />', {value: data[val].Name, text: data[val].Name}).appendTo(s);
+						}
+					}
+				}
+			}
+			else	{
+				if(roof == 999) {
+                                        if(data[val].Name == end) {
+                                                $('<option />', {selected: "selected", value: data[val].Name, text: data[val].Name}).appendTo(s);
+                                        }
+                                        else    {
+                                                $('<option />', {value: data[val].Name, text: data[val].Name}).appendTo(s);
+                                        }
+                                }
+                                else    {
+                                        if(roof >= val) {
+                                                if(data[val].Name == end)     {
+                                                        $('<option />', {selected: "selected", value: data[val].Name, text: data[val].Name}).appendTo(s);
+                                                }
+                                                else    {
+                                                        $('<option />', {value: data[val].Name, text: data[val].Name}).appendTo(s);
+                                                }
+                                        }
+                                }
+			}
+		}
+		s.appendTo('#yearpicker');
+	});
 }
 
 function drawAnimalList()       {

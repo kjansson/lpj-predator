@@ -83,7 +83,7 @@ func DBApi(w http.ResponseWriter, r *http.Request) {
                         w.Header().Set("Content-Type", "application/json")
                         w.Write(hunters)
                 case "getspecies":
-                        species, err := json.Marshal(l.GetSpecies())
+                        species, err := json.Marshal(l.GetPredators())
                         if err != nil   {
                                 fmt.Println("JSON marshal error: ", err)
                         }
@@ -110,6 +110,14 @@ func DBApi(w http.ResponseWriter, r *http.Request) {
                         }
                         w.Header().Set("Content-Type", "application/json")
                         w.Write(timeline)
+
+		case "getyears":
+			years, err := json.Marshal(l.GetYears())
+                        if err != nil   {
+                                fmt.Println("JSON marshal error: ", err)
+                        }
+                        w.Header().Set("Content-Type", "application/json")
+                        w.Write(years)
 
 	}
 }
