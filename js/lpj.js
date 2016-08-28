@@ -1,5 +1,6 @@
 //drawTimeLine();
-getSelectedYearURL();
+//getSelectedYearURL();
+getSelectedYear();
 drawDatePicker();
 drawMap();
 drawKillList();
@@ -9,6 +10,26 @@ drawTopTen();
 
 var startyear;
 var endyear;
+var year;
+
+
+function redrawAll()	{
+
+	getSelectedYear();
+//	getSelectedYearURL();
+	drawMap();
+	drawKillList();
+	drawMemberList();
+	drawAnimalList();
+	drawTopTen();
+
+}
+
+function getSelectedYear()	{
+
+	year = $('#year').val();
+
+}
 
 function getUrlParameter(sParam)
 {
@@ -29,13 +50,13 @@ function getSelectedYearURL()	{
 
 	//var start = document.getElementById("startyear");
 	//var end = document.getElementById("endyear");
-	var start = $("#startyear");
-	var end = $("#endyear");
+	//var start = $("#startyear");
+	var year = $("#year");
 	
 	
-	if(start == end)	{
-		return null;
-	}
+	//if(start == end)	{
+//		return null;
+//	}
 
 	var ustart;
 	var uend;
@@ -51,6 +72,7 @@ function getSelectedYearURL()	{
 
 function drawMemberList()	{
 	var memberList = document.getElementById("memberlist");
+	$("#memberlist").empty();
 
         if(memberList) {
                 var req = 'action=gethunters';
@@ -73,29 +95,36 @@ function drawMemberList()	{
 
 function drawDatePicker()	{
 
-	var start = getUrlParameter("startyear");
-	var end = getUrlParameter("endyear");
+	//var start = getUrlParameter("startyear");
+	var year = getUrlParameter("year");
 
+	$("#yearpicker").empty();
 	var req = 'action=getyears';
 	$.getJSON('api', req, function(data)        {
-		var s = $('<select id="startyear"/>'); 
+		var s = $('<select id="year" onchange="redrawAll()" />'); 
 
 		var roof = 999;
 
 		for(var val in data) 
 		{    
-			if(start == data[val].Name)	{
+			if(year == data[val].Name)	{
 				$('<option />', {selected: "selected", value: data[val].Name, text: data[val].Name}).appendTo(s); 
 				roof = val;
 			}
 			else	{
-				$('<option />', {value: data[val].Name, text: data[val].Name}).appendTo(s);
+				if(typeof data[val+1] !== 'undefined')	{
+					$('<option />', {value: data[val].Name, text: data[val].Name}).appendTo(s);
+				}
+				else	{
+					$('<option />', {selected: "selected", value: data[val].Name, text: data[val].Name}).appendTo(s);
+				}
 			}
 		} 
 		s.appendTo('#yearpicker');
 
-		$('#yearpicker').append('<p class="special_binder_yearpicker"> till </p>');
+		//$('#yearpicker').append('<p class="special_binder_yearpicker"> till </p>');
 
+		/*
 		var s = $('<select id="endyear"/>');
 		for(var val in data)
 		{
@@ -141,12 +170,14 @@ function drawDatePicker()	{
 			}
 		}
 		s.appendTo('#yearpicker');
+		*/
 	});
 }
 
 function drawAnimalList()       {
         var animalList = document.getElementById("animallist");
 
+	$("#animallist").empty();
         if(animalList) {
                 var req = 'action=getspecies';
 
@@ -171,6 +202,8 @@ function drawKillList()	{
 
 	var killList = document.getElementById("killList");
 
+	 $("#killList").empty();
+
 	if(killList) {
 	        var req = 'action=getkills';
 		var hunter = getUrlParameter('hunter');
@@ -183,6 +216,9 @@ function drawKillList()	{
 			req = req.concat('&species=').concat(species);
 	        }
 		req = req.concat('&limit=10')
+		if(year)	{
+			req = req.concat('&year=').concat(year);
+		}
 
 		$.getJSON('api', req, function(data)        {
 
@@ -202,6 +238,8 @@ function drawTopTen() {
 
         var topTen = document.getElementById("topTen");
 
+	 $("#topTen").empty();
+
         if(topTen) {
 
 		var hunter = getUrlParameter('hunter');
@@ -214,6 +252,10 @@ function drawTopTen() {
                         topTen.appendChild(h2);
 
 			var req = 'action=gettopten';
+			if(year)        {
+                        	req = req.concat('&year=').concat(year);
+			}
+
 			$.getJSON('api', req, function(data)        {
 
 				var place = 1
@@ -238,6 +280,10 @@ function drawTopTen() {
                         h2.appendChild(info)
                         topTen.appendChild(h2);
 			var req = 'action=gettotals';
+			if(year)        {
+                                req = req.concat('&year=').concat(year);
+                        }
+
 			var hunter = getUrlParameter('hunter');
 			var species = getUrlParameter('species');
 
@@ -279,6 +325,10 @@ function drawMap() {
         if(species)     {
                 req = req.concat('&species=').concat(species);
         }
+       	if(year)        {
+		req = req.concat('&year=').concat(year);
+	}
+
 	req = req.concat('&limit=0')
         var test;
         $.getJSON('api', req, function(data)        {

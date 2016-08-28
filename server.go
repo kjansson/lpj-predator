@@ -28,8 +28,8 @@ func main() {
 	http.Handle("/api", router)
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("./js/")))) 
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css/")))) 
-	log.Println("Server running on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Println("Server running on :80")
+	log.Fatal(http.ListenAndServe(":80", nil))
 }
 
 func Secret(user, realm string) string {
@@ -53,6 +53,7 @@ func DBApi(w http.ResponseWriter, r *http.Request) {
 	var hunter string = ""
 	var species string = ""
 	var limit int = 0 
+	var year string = "" 
 
 	if val, ok := r.Form["hunter"]; ok	{
 		hunter = val[0]
@@ -66,10 +67,15 @@ func DBApi(w http.ResponseWriter, r *http.Request) {
                 limit, _ = strconv.Atoi(val[0])
         }
 
+        if val, ok := r.Form["year"]; ok     {
+                year = val[0]
+        }
+
+
 	switch r.Form["action"][0]	{
 
 		case "getkills":
-			kills, err := json.Marshal(l.GetKills(hunter, species, limit))
+			kills, err := json.Marshal(l.GetKills(hunter, species, limit, year))
 			if err != nil	{
 				fmt.Println("JSON marshal error: ", err)
 			}
@@ -90,14 +96,14 @@ func DBApi(w http.ResponseWriter, r *http.Request) {
                         w.Header().Set("Content-Type", "application/json")
                         w.Write(species)
                 case "gettopten":
-                        scorers, err := json.Marshal(l.GetTopTen())
+                        scorers, err := json.Marshal(l.GetTopTen(year))
                         if err != nil   {
                                 fmt.Println("JSON marshal error: ", err)
                         }
                         w.Header().Set("Content-Type", "application/json")
                         w.Write(scorers)
 		case "gettotals":
-                        scorers, err := json.Marshal(l.GetTotals(hunter, species))
+                        scorers, err := json.Marshal(l.GetTotals(hunter, species, year))
                         if err != nil   {
                                 fmt.Println("JSON marshal error: ", err)
                         }
