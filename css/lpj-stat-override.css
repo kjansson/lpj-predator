@@ -1,0 +1,30 @@
+#map {
+	height:700px;
+	
+}
+
+#timeline {
+	height:700px;
+
+}
+
+.highcharts-container   {
+        width:100%;
+        height:100%;
+        padding: 0px 0px 0px 0px !important;
+        margin: 0px 0px 0px 0px !important;
+}
+
+#lpjstat	{
+
+	height:830px;
+
+}
+
+#kills	{
+	padding:0px;
+}
+
+#parenttabs {
+	padding:0px;
+}

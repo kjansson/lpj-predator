@@ -1,0 +1,44 @@
+.ui-tabs-anchor	{
+	color:white;
+}
+
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+    color: black;
+    text-decoration: none;
+}
+
+.ui-widget-header {
+    background: #000000;
+    color: #666666;
+    font-weight: bold;
+}
+
+.ui-state-default  {
+    border: 1px solid #333333;
+    background: #000000;
+    font-weight: normal;
+    color: #000000;
+}
+
+
+
+.ui-widget-content {
+    background: #000000;
+    color: #000000;
+}
+
+.ui-tabs-active	{
+}
+
+.ui-state-active	{
+	border: 3px solid #eeeeee;
+}
+
+.ui-state-focus	{
+	border: 3px solid #eeeeee;
+}
+
+.ui-state-default	{
+	border: 3px solid #eeeeee;
+	background-color: #eeeeee;
+}

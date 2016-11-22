@@ -11,6 +11,10 @@ drawTopTen();
 var startyear;
 var endyear;
 var year;
+var selected_hunter = null;
+var selected_animal = null;
+var map;
+var heatmap;
 
 
 function redrawAll()	{
@@ -19,9 +23,10 @@ function redrawAll()	{
 //	getSelectedYearURL();
 	drawMap();
 	drawKillList();
-	drawMemberList();
-	drawAnimalList();
-	drawTopTen();
+	drawStatus();
+	//drawMemberList();
+	//drawAnimalList();
+//	drawTopTen();
 
 }
 
@@ -69,10 +74,51 @@ function getSelectedYearURL()	{
 
 }
 
+function drawStatus()	{
+
+	//if (typeof selected_hunter != 'undefined')	{
+	if (!selected_hunter)	{
+		$("#hstatus")[0].innerHTML = "Jägare: Alla";
+	}
+	else	{
+		$("#hstatus")[0].innerHTML = "Jägare: "+selected_hunter;
+	}
+
+	//if (typeof selected_animal != 'undefined')     {
+	if (!selected_animal)     {
+		$("#hstatus")[0].innerHTML = "Jägare: Alla";
+	}
+	else	{
+
+		var req = 'action=getspecies';
+
+                $.getJSON('api', req, function(data)        {
+
+                        data.forEach(function(animal)     {
+				if(animal.Id == selected_animal)	{
+					$("#vstatus")[0].innerHTML = "Vilt: "+animal.Realname;					
+				}
+                        });
+
+                });
+	}	
+
+}
 
 function drawMemberList()	{
 	var memberList = document.getElementById("memberlist");
 	$("#memberlist").empty();
+
+
+	var li = document.createElement("li");
+	var a = document.createElement("a")
+	a.href = "#"
+	a.onclick = function(){selected_hunter = null; redrawAll(); return false;};
+	var info = document.createTextNode("Alla");
+	a.appendChild(info);
+	li.appendChild(a);
+	memberList.appendChild(li);
+
 
         if(memberList) {
                 var req = 'action=gethunters';
@@ -82,13 +128,14 @@ function drawMemberList()	{
                         data.forEach(function(hunter)     {
                                 var li = document.createElement("li");
 				var a = document.createElement("a")
-				a.href = "?hunter="+hunter.Name
+				a.href = "#"
+				a.id = hunter.Name;
+				a.onclick = function(){selected_hunter = hunter.Name; redrawAll(); return false;}; 
                                 var info = document.createTextNode(hunter.Name);
 				a.appendChild(info);
 				li.appendChild(a);
                                 memberList.appendChild(li);
                         });
-
                 });
         }
 }
@@ -179,14 +226,27 @@ function drawAnimalList()       {
 
 	$("#animallist").empty();
         if(animalList) {
+
+		var li = document.createElement("li");
+		var a = document.createElement("a");
+		//a.href = "?species="+animal.Id
+		a.href = "#";
+		a.onclick = function(){selected_animal = null; redrawAll(); return false;};
+		var info = document.createTextNode("Alla");
+		a.appendChild(info);
+		li.appendChild(a);
+		animalList.appendChild(li);
+
                 var req = 'action=getspecies';
 
                 $.getJSON('api', req, function(data)        {
 
                         data.forEach(function(animal)     {
                                 var li = document.createElement("li");
-                                var a = document.createElement("a")
-                                a.href = "?species="+animal.Id
+                                var a = document.createElement("a");
+                                //a.href = "?species="+animal.Id
+                                a.href = "#";
+				a.onclick = function(){selected_animal = animal.Id; redrawAll(); return false;};
                                 var info = document.createTextNode(animal.Realname);
                                 a.appendChild(info);
                                 li.appendChild(a);
@@ -205,9 +265,17 @@ function drawKillList()	{
 	 $("#killList").empty();
 
 	if(killList) {
+
+		var h2 = document.createElement("h2");
+		var info = document.createTextNode("Senast nedlagda");
+		h2.appendChild(info)
+		killList.appendChild(h2);
+
 	        var req = 'action=getkills';
-		var hunter = getUrlParameter('hunter');
-		var species = getUrlParameter('species');
+		//var hunter = getUrlParameter('hunter');
+		var hunter = selected_hunter;
+		//var species = getUrlParameter('species');
+		var species = selected_animal;
 
 		if(hunter)      {
 			req = req.concat('&hunter=').concat(hunter);
@@ -316,8 +384,10 @@ function drawTopTen() {
 function drawMap() {
 
         var req = 'action=getkills';
-        var hunter = getUrlParameter('hunter');
-        var species = getUrlParameter('species');
+ //       var hunter = getUrlParameter('hunter');
+	var hunter = selected_hunter;
+  //      var species = getUrlParameter('species');
+	var species = selected_animal;
 
         if(hunter)      {
                 req = req.concat('&hunter=').concat(hunter);
@@ -339,7 +409,12 @@ function drawMap() {
                         mapTypeId: google.maps.MapTypeId.SATELLITE
                 };
 
-                map = new google.maps.Map(document.getElementById('map'), mapOptions);
+		if (!map)	{
+                	map = new google.maps.Map(document.getElementById('map'), mapOptions);
+		}
+		else	{
+			heatmap.setMap(null)
+		}
 
                 var gpoints = [];
                 var i;
