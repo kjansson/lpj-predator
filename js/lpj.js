@@ -1,4 +1,4 @@
-//drawTimeLine();
+drawTimeLine();
 //getSelectedYearURL();
 getSelectedYear();
 drawDatePicker();
@@ -24,6 +24,7 @@ function redrawAll()	{
 	drawMap();
 	drawKillList();
 	drawStatus();
+	drawTimeLine();
 	//drawMemberList();
 	//drawAnimalList();
 //	drawTopTen();
@@ -479,8 +480,10 @@ function changeOpacity() {
 function drawTimeLine()	{
 
         var req = 'action=gettimeline';
-        var hunter = getUrlParameter('hunter');
-        var species = getUrlParameter('species');
+ //       var hunter = getUrlParameter('hunter');
+   //     var species = getUrlParameter('species');
+        var hunter = selected_hunter;
+        var species = selected_animal;
 
 
         if(hunter)      {
@@ -488,6 +491,9 @@ function drawTimeLine()	{
         }
         if(species)     {
                 req = req.concat('&species=').concat(species);
+        }
+        if(year)        {
+                req = req.concat('&year=').concat(year);
         }
 	req = req.concat('&limit=0')
 	

@@ -110,7 +110,7 @@ func DBApi(w http.ResponseWriter, r *http.Request) {
                         w.Header().Set("Content-Type", "application/json")
                         w.Write(scorers)
                 case "gettimeline":
-                        timeline, err := json.Marshal(l.GetTimeLine(hunter, species, limit))
+                        timeline, err := json.Marshal(l.GetTimeLine(hunter, species, limit, year))
                         if err != nil   {
                                 fmt.Println("JSON marshal error: ", err)
                         }
