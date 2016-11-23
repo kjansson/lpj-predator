@@ -27,7 +27,7 @@ function redrawAll()	{
 	drawTimeLine();
 	//drawMemberList();
 	//drawAnimalList();
-//	drawTopTen();
+	drawTopTen();
 
 }
 
