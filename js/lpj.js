@@ -560,6 +560,7 @@ function drawTS(data, stat, obj)	{
 			    categories: ['Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec',
 				'Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun']},
 			yAxis: {
+				allowDecimals: false,
 			    title: {
 				text: 'Nedlagda vilt'
 			    },
