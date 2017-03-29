@@ -17,17 +17,17 @@ var map;
 var heatmap;
 
 
-function redrawAll()	{
+function redrawAll()    {
 
-	getSelectedYear();
-//	getSelectedYearURL();
-	drawMap();
-	drawKillList();
-	drawStatus();
-	drawTimeLine();
-	//drawMemberList();
-	//drawAnimalList();
-	drawTopTen();
+        getSelectedYear();
+//      getSelectedYearURL();
+        drawMap();
+        drawKillList();
+        drawStatus();
+        drawTimeLine();
+        //drawMemberList();
+        //drawAnimalList();
+        drawTopTen();
 
 }
 
@@ -243,6 +243,7 @@ function drawAnimalList()       {
                 $.getJSON('api', req, function(data)        {
 
                         data.forEach(function(animal)     {
+
                                 var li = document.createElement("li");
                                 var a = document.createElement("a");
                                 //a.href = "?species="+animal.Id
@@ -311,10 +312,11 @@ function drawTopTen() {
 
         if(topTen) {
 
-		var hunter = getUrlParameter('hunter');
-		var species = getUrlParameter('species');
+//		var hunter = getUrlParameter('hunter');
+//		var species = getUrlParameter('species');
 
-		if(!hunter && !species)	{
+		//if(!hunter && !species)	{
+		if(selected_animal == null)	{
 			var h2 = document.createElement("h2");
                         var info = document.createTextNode("Topplista");
                         h2.appendChild(info)

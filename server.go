@@ -21,9 +21,11 @@ type APIReply	struct {
 
 func main() {
 
-	authenticator := auth.NewBasicAuthenticator("lekparken.nu", Secret)
+	UserAuthenticator := auth.NewBasicAuthenticator("lekparken.nu", UserSecret)
+	AdminAuthenticator := auth.NewBasicAuthenticator("lekparken.nu", AdminSecret)
 	router := mux.NewRouter().StrictSlash(true)
-	http.HandleFunc("/", auth.JustCheck(authenticator, Index))
+	http.HandleFunc("/", auth.JustCheck(UserAuthenticator, Index))
+	http.HandleFunc("/admin", auth.JustCheck(AdminAuthenticator, Admin))
 	router.HandleFunc("/api", DBApi)
 	http.Handle("/api", router)
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("./js/")))) 
@@ -32,17 +34,31 @@ func main() {
 	log.Fatal(http.ListenAndServe(":80", nil))
 }
 
-func Secret(user, realm string) string {
+func UserSecret(user, realm string) string {
 
         if user == "lekparken" {
                 return "$1$e1a09609$NRYb1LoqKq9oHDnwyKhP61"
         }
+	if user == "admin"	{
+		return "$1$3b5482cf$ToEXIdAF/H01ZnOl1DPJI0"	
+	}
         return ""
 }
 
+func AdminSecret(user, realm string) string {
+
+	if user == "admin"	{
+		return "$1$3b5482cf$ToEXIdAF/H01ZnOl1DPJI0"	
+	}
+        return ""
+}
 
 func Index(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "index.html")
+}
+	
+func Admin(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "admin.html")
 }	
 
 
