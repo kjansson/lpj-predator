@@ -6,6 +6,7 @@ drawMap();
 drawKillList();
 drawMemberList();
 drawAnimalList();
+drawOtherList();
 drawTopTen();
 
 var startyear;
@@ -87,7 +88,7 @@ function drawStatus()	{
 
 	//if (typeof selected_animal != 'undefined')     {
 	if (!selected_animal)     {
-		$("#hstatus")[0].innerHTML = "Jägare: Alla";
+		$("#vstatus")[0].innerHTML = "Vilt: Alla";
 	}
 	else	{
 
@@ -259,6 +260,24 @@ function drawAnimalList()       {
         }
 }
 
+function drawOtherList()       {
+        var otherList = document.getElementById("otherlist");
+
+        $("#otherlist").empty();
+        if(otherList) {
+
+                var li = document.createElement("li");
+                var a = document.createElement("a");
+                //a.href = "?species="+animal.Id
+                a.href = "#";
+                a.onclick = function(){selected_animal = "tot"; redrawAll(); return false;};
+                var info = document.createTextNode("Totalt fällda");
+                a.appendChild(info);
+                li.appendChild(a);
+                otherList.appendChild(li);
+        }
+}
+
 
 function drawKillList()	{
 
@@ -282,7 +301,7 @@ function drawKillList()	{
 		if(hunter)      {
 			req = req.concat('&hunter=').concat(hunter);
 		}
-		if(species)     {
+		if(species && species != "tot")     {
 			req = req.concat('&species=').concat(species);
 	        }
 		req = req.concat('&limit=10')
@@ -316,7 +335,8 @@ function drawTopTen() {
 //		var species = getUrlParameter('species');
 
 		//if(!hunter && !species)	{
-		if(selected_animal == null)	{
+		// Nothing chosen. Show top ten list.
+		if(selected_animal == null && selected_hunter == null)	{
 			var h2 = document.createElement("h2");
                         var info = document.createTextNode("Topplista");
                         h2.appendChild(info)
@@ -344,7 +364,41 @@ function drawTopTen() {
 				});
 			});
 		}
-		else	{
+		// Just animal selected. Show toplist for animal.
+		else if ((selected_animal != null && selected_animal != "tot") && selected_hunter == null)	{
+
+                        var h2 = document.createElement("h2");
+                        var info = document.createTextNode("Topplista");
+                        h2.appendChild(info)
+                        topTen.appendChild(h2);
+
+                        var req = 'action=gettoptenforspecies';
+                        if(year)        {
+                                req = req.concat('&year=').concat(year);
+                        }
+			if(selected_animal)	{
+				req = req.concat('&species=').concat(selected_animal);
+			}
+
+                        $.getJSON('api', req, function(data)        {
+
+                                var place = 1
+                                data.forEach(function(scorer)     {
+
+                                        if(scorer.Score != 0)   {
+
+                                                var p = document.createElement("p");
+                                                var info = document.createTextNode(place+": "+scorer.Name+" - "+scorer.Score+" poäng");
+                                                p.appendChild(info)
+                                                topTen.appendChild(p);
+                                                place++
+                                        }
+
+                                });
+                        });
+		}
+		// Total selected. Show total kills overall.
+		else if (selected_animal == null && selected_hunter != null)	{
 	
 			var h2 = document.createElement("h2");
                         var info = document.createTextNode("Totalt fällda");
@@ -355,17 +409,14 @@ function drawTopTen() {
                                 req = req.concat('&year=').concat(year);
                         }
 
-			var hunter = getUrlParameter('hunter');
-			var species = getUrlParameter('species');
+			//var hunter = getUrlParameter('hunter');
+			//var species = getUrlParameter('species');
 
 			
 
-			if(hunter)      {
-				req = req.concat('&hunter=').concat(hunter);
+			if(selected_hunter)      {
+				req = req.concat('&hunter=').concat(selected_hunter);
 			}
-	                if(species)     {
-         	               req = req.concat('&species=').concat(species);
-	                }
 
 			$.getJSON('api', req, function(data)        {
 
@@ -379,6 +430,40 @@ function drawTopTen() {
 
                 	});
 		}
+		// Total selected. Show total kills overall.
+                else if (selected_animal == "tot")      {
+
+                        var h2 = document.createElement("h2");
+                        var info = document.createTextNode("Totalt fällda");
+                        h2.appendChild(info)
+                        topTen.appendChild(h2);
+                        var req = 'action=gettotals';
+                        if(year)        {
+                                req = req.concat('&year=').concat(year);
+                        }
+
+                        //var hunter = getUrlParameter('hunter');
+                        //var species = getUrlParameter('species');
+
+
+
+                        if(selected_hunter)      {
+                                req = req.concat('&hunter=').concat(selected_hunter);
+                        }
+
+                        $.getJSON('api', req, function(data)        {
+
+                                data.forEach(function(kill)     {
+
+                                        var p = document.createElement("p");
+                                        var info = document.createTextNode(kill.Animal+" - "+kill.Q+"st");
+                                        p.appendChild(info)
+                                        topTen.appendChild(p);
+                                });
+
+                        });
+                }
+
         }
 }
 
