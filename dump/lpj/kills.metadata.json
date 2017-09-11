@@ -1,0 +1,1 @@
+{ "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "lpj.kills", "name" : "_id_" }, { "v" : 1, "key" : { "hunter" : 1 }, "ns" : "lpj.kills", "name" : "hunter_1" }, { "v" : 1, "key" : { "animal.id" : 1 }, "ns" : "lpj.kills", "name" : "animal.id_1" }, { "v" : 1, "key" : { "udate" : -1 }, "ns" : "lpj.kills", "name" : "udate_-1" } ] }
