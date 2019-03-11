@@ -24,15 +24,15 @@ func main() {
 	UserAuthenticator := auth.NewBasicAuthenticator("lekparken.nu", UserSecret)
 	AdminAuthenticator := auth.NewBasicAuthenticator("lekparken.nu", AdminSecret)
 	router := mux.NewRouter().StrictSlash(true)
-	http.HandleFunc("/", auth.JustCheck(UserAuthenticator, Index))
-	http.HandleFunc("/report", auth.JustCheck(UserAuthenticator, Report))
-	http.HandleFunc("/admin", auth.JustCheck(AdminAuthenticator, Admin))
-	router.HandleFunc("/api", DBApi)
-	http.Handle("/api", router)
+	http.HandleFunc("/lpjl", auth.JustCheck(UserAuthenticator, Index))
+	http.HandleFunc("/lpjl/report", auth.JustCheck(UserAuthenticator, Report))
+	http.HandleFunc("/lpjl/admin", auth.JustCheck(AdminAuthenticator, Admin))
+	router.HandleFunc("/lpjl/api", DBApi)
+	http.Handle("/lpjl/api", router)
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("./js/")))) 
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css/")))) 
-	log.Println("Server running on :80")
-	log.Fatal(http.ListenAndServe(":80", nil))
+	log.Println("Server running on :8099")
+	log.Fatal(http.ListenAndServe(":8099", nil))
 }
 
 func UserSecret(user, realm string) string {

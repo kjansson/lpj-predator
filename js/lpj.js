@@ -68,7 +68,7 @@ function getSelectedYearURL()	{
 	var ustart;
 	var uend;
 	var req = 'action=getyear';
-        $.getJSON('api', req, function(data)        {
+        $.getJSON('lpjl/api', req, function(data)        {
 
 		ustart = data.start;
 
@@ -94,7 +94,7 @@ function drawStatus()	{
 
 		var req = 'action=getspecies';
 
-                $.getJSON('api', req, function(data)        {
+                $.getJSON('lpjl/api', req, function(data)        {
 
                         data.forEach(function(animal)     {
 				if(animal.Id == selected_animal)	{
@@ -125,7 +125,7 @@ function drawMemberList()	{
         if(memberList) {
                 var req = 'action=gethunters';
 
-                $.getJSON('api', req, function(data)        {
+                $.getJSON('lpjl/api', req, function(data)        {
 
                         data.forEach(function(hunter)     {
                                 var li = document.createElement("li");
@@ -149,7 +149,7 @@ function drawDatePicker()	{
 
 	$("#yearpicker").empty();
 	var req = 'action=getyears';
-	$.getJSON('api', req, function(data)        {
+	$.getJSON('lpjl/api', req, function(data)        {
 		var s = $('<select id="year" onchange="redrawAll()" />'); 
 
 		var roof = 999;
@@ -241,7 +241,7 @@ function drawAnimalList()       {
 
                 var req = 'action=getspecies';
 
-                $.getJSON('api', req, function(data)        {
+                $.getJSON('lpjl/api', req, function(data)        {
 
                         data.forEach(function(animal)     {
 
@@ -275,6 +275,16 @@ function drawOtherList()       {
                 a.appendChild(info);
                 li.appendChild(a);
                 otherList.appendChild(li);
+
+                var li = document.createElement("li");
+                var a = document.createElement("a");
+                a.href = "#";
+                a.onclick = function(){selected_animal = "list"; redrawAll(); return false;};
+                var info = document.createTextNode("Poänglista");
+                a.appendChild(info);
+                li.appendChild(a);
+                otherList.appendChild(li);
+
         }
 }
 
@@ -309,7 +319,7 @@ function drawKillList()	{
 			req = req.concat('&year=').concat(year);
 		}
 
-		$.getJSON('api', req, function(data)        {
+		$.getJSON('lpjl/api', req, function(data)        {
 
 			data.forEach(function(kill)	{
 				var p = document.createElement("p");
@@ -347,7 +357,7 @@ function drawTopTen() {
                         	req = req.concat('&year=').concat(year);
 			}
 
-			$.getJSON('api', req, function(data)        {
+			$.getJSON('lpjl/api', req, function(data)        {
 
 				var place = 1
 				data.forEach(function(scorer)     {
@@ -365,7 +375,7 @@ function drawTopTen() {
 			});
 		}
 		// Just animal selected. Show toplist for animal.
-		else if ((selected_animal != null && selected_animal != "tot") && selected_hunter == null)	{
+		else if ((selected_animal != null && selected_animal != "tot" && selected_animal != "list") && selected_hunter == null)	{
 
                         var h2 = document.createElement("h2");
                         var info = document.createTextNode("Topplista");
@@ -380,7 +390,7 @@ function drawTopTen() {
 				req = req.concat('&species=').concat(selected_animal);
 			}
 
-                        $.getJSON('api', req, function(data)        {
+                        $.getJSON('lpjl/api', req, function(data)        {
 
                                 var place = 1
                                 data.forEach(function(scorer)     {
@@ -418,7 +428,7 @@ function drawTopTen() {
 				req = req.concat('&hunter=').concat(selected_hunter);
 			}
 
-			$.getJSON('api', req, function(data)        {
+			$.getJSON('lpjl/api', req, function(data)        {
 
 				data.forEach(function(kill)     {
 
@@ -451,7 +461,7 @@ function drawTopTen() {
                                 req = req.concat('&hunter=').concat(selected_hunter);
                         }
 
-                        $.getJSON('api', req, function(data)        {
+                        $.getJSON('lpjl/api', req, function(data)        {
 
                                 data.forEach(function(kill)     {
 
@@ -463,6 +473,24 @@ function drawTopTen() {
 
                         });
                 }
+		else if (selected_animal == "list")      {
+			var h2 = document.createElement("h2");
+                        var info = document.createTextNode("Aktuella poäng");
+                        h2.appendChild(info)
+                        topTen.appendChild(h2);
+                        var req = 'action=getspecies';
+                        $.getJSON('lpjl/api', req, function(data)        {
+
+                                data.forEach(function(predator)     {
+
+                                        var p = document.createElement("p");
+                                        var info = document.createTextNode(predator.Realname+" - "+predator.Points+" poäng");
+                                        p.appendChild(info)
+                                        topTen.appendChild(p);
+                                });
+
+                        });
+		}
 
         }
 }
@@ -489,7 +517,7 @@ function drawMap() {
 
 	req = req.concat('&limit=0')
         var test;
-        $.getJSON('api', req, function(data)        {
+        $.getJSON('lpjl/api', req, function(data)        {
 
                 var mapOptions = {
                         zoom: 12,
@@ -588,7 +616,7 @@ function drawTimeLine()	{
 
 $.ajax({
 	dataType: "json",
-	url: '/api',
+	url: '/lpjl/api',
 	data: req,
 	success: drawTS
 });
