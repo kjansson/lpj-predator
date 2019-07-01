@@ -245,15 +245,17 @@ function drawAnimalList()       {
 
                         data.forEach(function(animal)     {
 
-                                var li = document.createElement("li");
-                                var a = document.createElement("a");
-                                //a.href = "?species="+animal.Id
-                                a.href = "#";
-				a.onclick = function(){selected_animal = animal.Id; redrawAll(); return false;};
-                                var info = document.createTextNode(animal.Realname);
-                                a.appendChild(info);
-                                li.appendChild(a);
-                                animalList.appendChild(li);
+				if (animal.Realname != "split")	{
+					var li = document.createElement("li");
+					var a = document.createElement("a");
+					//a.href = "?species="+animal.Id
+					a.href = "#";
+					a.onclick = function(){selected_animal = animal.Id; redrawAll(); return false;};
+					var info = document.createTextNode(animal.Realname);
+					a.appendChild(info);
+					li.appendChild(a);
+					animalList.appendChild(li);
+				}
                         });
 
                 });
@@ -322,10 +324,13 @@ function drawKillList()	{
 		$.getJSON('lpjl/api', req, function(data)        {
 
 			data.forEach(function(kill)	{
-				var p = document.createElement("p");
-				var info = document.createTextNode(kill.Date+" - "+kill.Animal.Realname+" ("+kill.Q+") - "+kill.Location.Pass+" - "+kill.Hunter);
-				p.appendChild(info)
-				killList.appendChild(p);
+
+				if(kill.Animal.Realname != "split") {
+					var p = document.createElement("p");
+					var info = document.createTextNode(kill.Date+" - "+kill.Animal.Realname+" ("+kill.Q+") - "+kill.Location.Pass+" - "+kill.Hunter);
+					p.appendChild(info)
+					killList.appendChild(p);
+				}
 			});
 
 		});
@@ -362,7 +367,7 @@ function drawTopTen() {
 				var place = 1
 				data.forEach(function(scorer)     {
 				
-					if(scorer.Score != 0)	{
+					if(scorer.Score != 0 && scorer.Name != "Ej medlem")	{
 
 						var p = document.createElement("p");
 						var info = document.createTextNode(place+": "+scorer.Name+" - "+scorer.Score+" poäng");
@@ -395,6 +400,7 @@ function drawTopTen() {
                                 var place = 1
                                 data.forEach(function(scorer)     {
 
+                                        //if(scorer.Score != 0 && scorer.Name != "Ej medlem")   {
                                         if(scorer.Score != 0)   {
 
                                                 var p = document.createElement("p");
@@ -402,7 +408,7 @@ function drawTopTen() {
                                                 p.appendChild(info)
                                                 topTen.appendChild(p);
                                                 place++
-                                        }
+                                       }
 
                                 });
                         });
@@ -432,10 +438,13 @@ function drawTopTen() {
 
 				data.forEach(function(kill)     {
 
-					var p = document.createElement("p");
-					var info = document.createTextNode(kill.Animal+" - "+kill.Q+"st");
-					p.appendChild(info)
-					topTen.appendChild(p);
+					if(kill.Animal != "split") {
+
+						var p = document.createElement("p");
+						var info = document.createTextNode(kill.Animal+" - "+kill.Q+"st");
+						p.appendChild(info)
+						topTen.appendChild(p);
+					}
 				});
 
                 	});
@@ -464,11 +473,12 @@ function drawTopTen() {
                         $.getJSON('lpjl/api', req, function(data)        {
 
                                 data.forEach(function(kill)     {
-
-                                        var p = document.createElement("p");
-                                        var info = document.createTextNode(kill.Animal+" - "+kill.Q+"st");
-                                        p.appendChild(info)
-                                        topTen.appendChild(p);
+					if(kill.Animal != "split") {
+                           	             var p = document.createElement("p");
+                               		         var info = document.createTextNode(kill.Animal+" - "+kill.Q+"st");
+                               	       		  p.appendChild(info)
+                               		         topTen.appendChild(p);
+					}
                                 });
 
                         });
