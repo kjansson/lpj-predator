@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
-	l "lpjdbapi"
+	l "lpj-predator-dbapi"
 	"fmt"
 	"encoding/json"
 	"strconv"
